@@ -1,0 +1,12 @@
+[
+  {
+    "keys": ["enter"], "command": "pipe_enter",
+    "context": [{ "key": "setting.pipe", "operator": "equal", "operand": true }]
+  },
+  { "keys": ["ctrl+c"], "command": "pipe_connect" },
+  { "keys": ["ctrl+s"], "command": "pipe_send_selection" },
+  { "keys": ["ctrl+l"], "command": "pipe_send_line" },
+  { "keys": ["ctrl+b"], "command": "pipe_send_block" },
+  { "keys": ["ctrl+p"], "command": "pipe_send_paragraph" },
+  { "keys": ["ctrl+f"], "command": "pipe_send_file", "args": { "show_code": true } }
+]
