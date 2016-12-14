@@ -28,7 +28,7 @@ Instead of directly typing into a socket buffer, you can send it text from a con
 * `ctrl+f` send file to connected socket buffer
 
 ### Named Connections
-Specifying the host and port for frequently used network processes can become tedious, so you can specify named connections under `Sublime Text → Preferences → Package Settings → Socket → Connections - User`. `Socket.sublime-commands` in this repository contains examples.
+Specifying the host and port for frequently used network processes can become tedious, so you can specify named connections under `Sublime Text → Preferences → Package Settings → Socket → Connections - User`. [`Socket.sublime-commands`](https://github.com/nasser/socket/blob/master/Socket.sublime-commands) in this repository contains examples.
 
 Installation
 ------------
