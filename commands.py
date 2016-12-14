@@ -157,7 +157,6 @@ class NewAdHocSocketCommand(sublime_plugin.WindowCommand):
     
 class SocketReplListener(sublime_plugin.EventListener):
     def on_close(self, view):
-        # FIX this is firing for all window closes
         if view.id() in socket_workers:
             socket_workers[view.id()].on_close()
             del socket_workers[view.id()]
