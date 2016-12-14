@@ -34,9 +34,9 @@
               "file": "${packages}/User/Default (Windows).sublime-keymap",
               "platform": "Windows"}},
             { "caption": "-" },
-            {"caption": "REPLs - Default", "command": "open_file", "args":
+            {"caption": "Connections - Default", "command": "open_file", "args":
               {"file": "${packages}/Socket/Socket.sublime-commands"}},
-            {"caption": "REPLs - User", "command": "open_file", "args":
+            {"caption": "Connections - User", "command": "open_file", "args":
               {"file": "${packages}/User/Socket.sublime-commands"}}
           ]
         }
