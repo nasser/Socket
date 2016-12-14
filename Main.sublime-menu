@@ -12,17 +12,17 @@
         "children":
         [
         {
-          "caption": "Pipe",
+          "caption": "Socket",
           "children": [
             {"caption": "Settings - Default", "command": "open_file", "args":
-              {"file": "${packages}/Pipe/Pipe.sublime-settings"}},
+              {"file": "${packages}/Socket/Socket.sublime-settings"}},
             {"caption": "Settings - User", "command": "open_file", "args":
-              {"file": "${packages}/User/Pipe.sublime-settings"}},
+              {"file": "${packages}/User/Socket.sublime-settings"}},
             { "caption": "-" },
             {"caption": "Key Bindings – Default", "command": "open_file", "args": {
-              "file": "${packages}/Pipe/Default.sublime-keymap"}},
+              "file": "${packages}/Socket/Default.sublime-keymap"}},
             {"caption": "Key Bindings – OSX Extension", "command": "open_file", "args": {
-              "file": "${packages}/Pipe/Default (OSX).sublime-keymap",
+              "file": "${packages}/Socket/Default (OSX).sublime-keymap",
               "platform": "OSX"}},
             {"caption": "Key Bindings – User", "command": "open_file", "args": {
               "file": "${packages}/User/Default (OSX).sublime-keymap",
@@ -35,9 +35,9 @@
               "platform": "Windows"}},
             { "caption": "-" },
             {"caption": "REPLs - Default", "command": "open_file", "args":
-              {"file": "${packages}/Pipe/Pipe.sublime-commands"}},
+              {"file": "${packages}/Socket/Socket.sublime-commands"}},
             {"caption": "REPLs - User", "command": "open_file", "args":
-              {"file": "${packages}/User/Pipe.sublime-commands"}}
+              {"file": "${packages}/User/Socket.sublime-commands"}}
           ]
         }
       ]

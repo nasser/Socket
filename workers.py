@@ -4,4 +4,4 @@
 view_connections = {}
 
 # pipe view id -> pipe worker
-pipe_workers = {}
+socket_workers = {}

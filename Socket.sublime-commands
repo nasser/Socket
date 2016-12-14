@@ -1,0 +1,29 @@
+[
+    {
+        "caption": "Socket: New",
+        "command": "new_ad_hoc_socket"
+    },
+    {
+        "caption": "Socket: Nostrand",
+        "command": "new_socket",
+        "args": {
+          "name": "Nostrand",
+          "syntax": "Packages/Clojure/Clojure.tmLanguage",
+          "type": "udp",
+          "port": 11217,
+          "initial": "(binding [*warn-on-reflection* false] (do (println \"; Nostrand REPL\") (println (str \"; Clojure \" (clojure-version))) (println (str \"; Mono \" (.Invoke (.GetMethod Mono.Runtime \"GetDisplayName\" ^BindingFlags (enum-or BindingFlags/NonPublic BindingFlags/Static)) nil nil)))))"
+        }
+    },
+    {
+        "caption": "Socket: Arcadia",
+        "command": "new_socket",
+        "args": {
+          "name": "Arcadia",
+          "syntax": "Packages/Clojure/Clojure.tmLanguage",
+          
+          "type": "udp",
+          "port": 11211,
+          "initial": "(binding [*warn-on-reflection* false] (do (println \"; Arcadia REPL\") (println (str \"; Clojure \" (clojure-version))) (println (str \"; Unity \" (UnityEditorInternal.InternalEditorUtility/GetFullUnityVersion))) (println (str \"; Mono \" (.Invoke (.GetMethod Mono.Runtime \"GetDisplayName\" ^BindingFlags (enum-or BindingFlags/NonPublic BindingFlags/Static)) nil nil)))))"
+        }
+    }
+]

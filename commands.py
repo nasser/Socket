@@ -1,80 +1,99 @@
-from subprocess_pipe import SubprocessPipe
-from socket_pipe import SocketPipe
 import sublime, sublime_plugin
-from pipe import pipe_workers, view_connections
+from Socket.socket_pipe import SocketPipe
+from Socket.workers import socket_workers, view_connections
 
 def text_at_current_line(view):
-  return view.substr(view.line(view.sel()[0])).strip().encode('utf-8')
+  return view.substr(view.line(view.sel()[0])).strip()
   
 def text_at_current_selections(view):
-  return "".join([view.substr(s) for s in view.sel()]).encode('utf-8')
+  return "".join([view.substr(s) for s in view.sel()])
   
 def all_text(view):
-  return view.substr(sublime.Region(0, view.size())).encode('utf-8')
+  return view.substr(sublime.Region(0, view.size()))
   
-def all_pipe_views(syntax=None, view_id=None):
+def all_socket_views(syntax=None, view_id=None):
     views = []
     for window in sublime.windows():
         for view in window.views():
-            if view.settings().get("pipe"):
+            if view.settings().get("socket"):
                 if (syntax == None or view.settings().get("syntax") == syntax) and (view_id == None or view.id() == view_id):
                     views.append(view)
     return views
 
-class PipeConnectCommand(sublime_plugin.WindowCommand):
+class SocketConnectCommand(sublime_plugin.WindowCommand):
     def select_view(self, i):
-        views = [v.view for v in pipe_workers.values()]
+        views = [v.view for v in socket_workers.values()]
         view_connections[self.window.active_view().id()] = views[i].id()
-        self.window.active_view().set_status("pipe", "Connected to %s " % views[i].name())
+        self.window.active_view().set_status("socket", "Connected to %s " % views[i].name())
+        original_view = self.window.active_view()
+        self.window.focus_view(views[i])
+        self.window.focus_view(original_view)
         
     def run(self):
-        if(len(pipe_workers) == 1):
-            only_view = pipe_workers.values()[0].view
+        if(len(socket_workers) == 1):
+            only_view = list(socket_workers.values())[0].view
             view_connections[self.window.active_view().id()] = only_view.id()
-            self.window.active_view().set_status("pipe", "Connected to %s " % only_view.name())
+            self.window.active_view().set_status("socket", "Connected to %s " % only_view.name())
+            original_view = self.window.active_view()
+            self.window.focus_view(only_view)
+            self.window.focus_view(original_view)
             
-        elif(len(pipe_workers) > 0):
-            names = [[v.view.name(), v.view.substr(v.view.line(v.view.size()))] for v in pipe_workers.values()]
+        elif(len(socket_workers) > 0):
+            names = [[v.view.name(), v.view.substr(v.view.line(v.view.size()))] for v in list(socket_workers.values())]
             source_view = self.window.active_view()
-            
             self.window.show_quick_panel(names, self.select_view)
 
-class PipeSendBaseCommand(sublime_plugin.TextCommand):
+
+class SocketSendBaseCommand(sublime_plugin.TextCommand):
     def text(self):
         return ""
         
     def run(self, edit, show_code=False):
         try:
-            for pipe_view in all_pipe_views(view_id=view_connections[self.view.id()]):
-                pw = pipe_workers[pipe_view.id()]
-                str = self.text()
+            for socket_view in all_socket_views(view_id=view_connections[self.view.id()]):
+                w = socket_workers[socket_view.id()]
+                s = self.text()
                 if show_code:
-                    pw.write(str)
-                pw.send(str)
-        except KeyError, e:
+                    w.write(s)
+                w.send(s)
+        except KeyError:
             # TODO attempt auto-connect
-            if(len(pipe_workers) == 1):
-                only_view = pipe_workers.values()[0].view
+            if(len(socket_workers) == 1):
+                only_view = socket_workers.values()[0].view
                 view_connections[self.window.active_view().id()] = only_view.id()
-                window.active_view().set_status("pipe", "Connected to %s " % only_view.name())
+                window.active_view().set_status("socket", "Connected to %s " % only_view.name())
             else:
-                print "no pipe connection"
+                print("no socket connection")
 
     
-class PipeSendSelectionCommand(PipeSendBaseCommand):
+class SocketInsertTextCommand(sublime_plugin.TextCommand):
+    def __init__(self, view):
+        self.view = view
+        self.written_characters = 0
+        
+    def run(self, edit, content=""):
+        self.view.set_read_only(False)
+        self.view.insert(edit, self.written_characters, content)
+        self.view.set_read_only(True)
+        self.written_characters += len(content)
+        self.view.sel().clear()
+        self.view.sel().add(sublime.Region(self.view.size(), self.view.size()))
+        self.view.show(self.view.size())
+    
+class SocketSendSelectionCommand(SocketSendBaseCommand):
     def text(self):
         return text_at_current_selections(self.view) + "\n"
             
-class PipeSendLineCommand(PipeSendBaseCommand):
+class SocketSendLineCommand(SocketSendBaseCommand):
     def text(self):
         return text_at_current_line(self.view) + "\n"
         
-class PipeSendFileCommand(PipeSendBaseCommand):
+class SocketSendFileCommand(SocketSendBaseCommand):
     def text(self):
-        print all_text(self.view) + "\n"
+        print(all_text(self.view) + "\n")
         return all_text(self.view) + "\n"
         
-class PipeSendBlockCommand(PipeSendBaseCommand):
+class SocketSendBlockCommand(SocketSendBaseCommand):
     def text(self):
         old_sel = list(self.view.sel())
         self.view.run_command("expand_selection", {"to": "brackets"})
@@ -85,7 +104,7 @@ class PipeSendBlockCommand(PipeSendBaseCommand):
             self.view.sel().add(s)
         return str
         
-class PipeSendParagraphCommand(PipeSendBaseCommand):
+class SocketSendParagraphCommand(SocketSendBaseCommand):
     def text(self):
         old_sel = list(self.view.sel())
         self.view.run_command("expand_selection_to_paragraph")
@@ -95,35 +114,50 @@ class PipeSendParagraphCommand(PipeSendBaseCommand):
             self.view.sel().add(s)
         return str
 
-class NewSubprocessPipeCommand(sublime_plugin.WindowCommand):
-    def run(self, cmd, args=[], name=None, syntax="", initial=""):
+class NewSocketCommand(sublime_plugin.WindowCommand):
+    def connect(self, view, to):
+        view_connections[view.id()] = to.id()
+        view.set_status("socket", "Connected to %s " % to.name())
+        
+    def run(self, type, port, name=None, syntax="", initial="", host="localhost"):
+        original_view = self.window.active_view()
+        # https://forum.sublimetext.com/t/set-layout-reference/5713
+        self.window.run_command("set_layout", {"rows":[0, 0.75, 1], "cols":[0, 1], "cells":[[0, 0, 1, 1], [0, 1, 1, 2]]})
+        self.window.run_command("focus_group", {"group":1})
         if name == None:
-            name = cmd
-        pipeview = self.window.new_file()
-        pipeview.set_scratch(True)
-        pipeview.settings().set("pipe", True)
-        pipeview.set_read_only(True)
-        pipeview.set_name("%s (%d)" % (name, pipeview.id()))
-        pipeview.set_syntax_file(syntax)
-        sp = SubprocessPipe(pipeview, cmd, args, initial)
+            name = "%s:%s" % (host, port)
+        socketview = self.window.new_file()
+        title = "%s (%d)" % (name, socketview.id())
+        socketview.set_scratch(True)
+        socketview.settings().set("socket", True)
+        socketview.set_read_only(True)
+        socketview.set_name(title)
+        socketview.set_syntax_file(syntax)
+        sp = SocketPipe(socketview, host, port, type, initial)
         sp.go()
-        pipe_workers[pipeview.id()] = sp
-
-
-class NewSocketPipeCommand(sublime_plugin.WindowCommand):
-  def run(self, type, port, name=None, syntax="", initial="", host="localhost"):
-    if name == None:
-        name = "%s:%s" % (host, port)
-    pipeview = self.window.new_file()
-    pipeview.set_scratch(True)
-    pipeview.settings().set("pipe", True)
-    pipeview.set_read_only(True)
-    pipeview.set_name("%s (%d)" % (name, pipeview.id()))
-    pipeview.set_syntax_file(syntax)
-    sp = SocketPipe(pipeview, host, port, type, initial)
-    sp.go()
-    pipe_workers[pipeview.id()] = sp
+        socket_workers[socketview.id()] = sp
+        # connect original view to new socket
+        self.connect(original_view, socketview)
+        self.window.run_command("focus_group", {"group":0})
     
-class PipeReplListener(sublime_plugin.EventListener):
+class NewAdHocSocketCommand(sublime_plugin.WindowCommand):
+    def launch(self):
+        self.window.run_command("new_socket", {"type": "udp", "port": self.port, "host":self.host})
+        
+    def port_done(self, port):
+        self.port = int(port)
+        self.launch()
+        
+    def host_done(self, host):
+        self.host = host
+        self.window.show_input_panel("Port", "11211", self.port_done, None, None)
+        
+    def run(self):
+        self.window.show_input_panel("Host", "localhost", self.host_done, None, None)
+    
+class SocketReplListener(sublime_plugin.EventListener):
     def on_close(self, view):
-        pipe_workers[view.id()].on_close()
+        # FIX this is firing for all window closes
+        if view.id() in socket_workers:
+            socket_workers[view.id()].on_close()
+            del socket_workers[view.id()]
