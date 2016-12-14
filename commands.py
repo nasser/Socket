@@ -142,18 +142,28 @@ class NewSocketCommand(sublime_plugin.WindowCommand):
     
 class NewAdHocSocketCommand(sublime_plugin.WindowCommand):
     def launch(self):
-        self.window.run_command("new_socket", {"type": "udp", "port": self.port, "host":self.host})
+        self.window.run_command("new_socket", {"type": self.type, "port": self.port, "host":self.host})
         
     def port_done(self, port):
         self.port = int(port)
         self.launch()
         
-    def host_done(self, host):
-        self.host = host
-        self.window.show_input_panel("Port", "11211", self.port_done, None, None)
+    def on_data(self, data):
+        if self.host == None:
+            self.host = data
+            self.window.show_input_panel("Port", "11211", self.on_data, None, None)
+        elif self.port == None:
+            self.port = int(data)
+            self.window.show_input_panel("Protocol", "udp", self.on_data, None, None)
+        elif self.type == None:
+            self.type = data.lower()
+            self.launch()
         
     def run(self):
-        self.window.show_input_panel("Host", "localhost", self.host_done, None, None)
+        self.host = None
+        self.port = None
+        self.type = None
+        self.window.show_input_panel("Host", "localhost", self.on_data, None, None)
     
 class SocketReplListener(sublime_plugin.EventListener):
     def on_close(self, view):
