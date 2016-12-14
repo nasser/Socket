@@ -10,7 +10,7 @@ Alpha. Subject to change.
 
 Usage
 -----
-Sublime Sockets sends text from Sublime Text buffers to processes listening on the network. It is designed to enable live coding in [Arcadia](https://github.com/arcadia-unity/Arcadia) and [Nostrand](github.com/nasser/nostrand), but it is language agnostic and can be used with any network based tool.
+Sublime Sockets sends text from Sublime Text buffers to processes listening on the network. It is designed to enable live coding in [Arcadia](https://github.com/arcadia-unity/Arcadia) and [Nostrand](https://github.com/nasser/nostrand), but it is language agnostic and can be used with any network based tool.
 
 ### Socket Buffers
 A connection between Sublime Text and a network processes is represented by a *socket buffer*. Socket buffers are created with the `Socket: New` command. You will be prompted to enter the host and port of the process you want to communicate with. Socket buffers by default sit under the text buffer they were created from.
