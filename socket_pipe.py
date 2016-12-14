@@ -2,7 +2,6 @@ import threading
 import socket
 import errno
 import sublime, sublime_plugin
-from Socket.workers import pipe_workers
 
 # TODO UdpPipe vs TcpPipe?
 class SocketPipe(threading.Thread):
@@ -49,8 +48,6 @@ class SocketPipe(threading.Thread):
         
     def on_close(self):
         self.running = False
-        # if(pipe_workers.has_key(self.view.id())):
-            # pipe_workers.pop(self.view.id())
         self.sock.shutdown(socket.SHUT_RDWR)
         self.sock.close()
     
