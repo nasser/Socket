@@ -9,7 +9,7 @@ Status
 Alpha. Subject to change.
 
 Usage
------
+-----x
 Sublime Sockets sends text from Sublime Text buffers to processes listening on the network. It is designed to enable live coding in [Arcadia](https://github.com/arcadia-unity/Arcadia) and [Nostrand](https://github.com/nasser/nostrand), but it is language agnostic and can be used with any network based tool.
 
 ### Socket Buffers
@@ -34,7 +34,7 @@ Installation
 ------------
 
 ```
-$ cd ~/Library/Application Support/Sublime Text 3/Packages
+$ cd "~/Library/Application Support/Sublime Text 3/Packages"
 $ git clone https://github.com/nasser/Socket.git
 ```
 
