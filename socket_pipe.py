@@ -11,9 +11,11 @@ class SocketPipe(threading.Thread):
         self.view = view
         self.written_characters = 0
         self.buffer = []
-        
+
         if type == "tcp":
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        elif type == "tcp6":
+            self.sock = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
         elif type == "udp":
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         else:
