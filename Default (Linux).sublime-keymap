@@ -7,6 +7,6 @@
   { "keys": ["ctrl+shift+s"], "command": "socket_send_selection" },
   { "keys": ["ctrl+shift+l"], "command": "socket_send_line" },
   { "keys": ["ctrl+shift+b"], "command": "socket_send_block" },
-  { "keys": ["ctrl+shift+p"], "command": "socket_send_paragraph" },
+  { "keys": ["ctrl+shift+r"], "command": "socket_send_paragraph" },
   { "keys": ["ctrl+shift+f"], "command": "socket_send_file", "args": { "show_code": true } }
 ]
