@@ -32,9 +32,9 @@
         "args": {
           "name": "Arcadia",
           "type": "tcp6",
-          "syntax": "Packages/arcadia-repl/Clojure.tmLanguage",
+          "syntax": "Packages/Clojure/Clojure.tmLanguage",
           "port": 5555,
-          "initial": "{:hello :world}\n"
+          "initial": ":hello-world\n"
         }
     }
 ]
