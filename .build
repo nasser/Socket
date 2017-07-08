@@ -1,0 +1,10 @@
+{
+	"automatic_order": true,
+	"iterations": 1,
+	"mods_load_order":
+	[
+		"workers.py",
+		"socket_pipe.py",
+		"commands.py"
+	]
+}

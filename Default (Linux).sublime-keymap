@@ -1,8 +1,18 @@
 [
-  {
-    "keys": ["enter"], "command": "socket_enter",
-    "context": [{ "key": "setting.socket", "operator": "equal", "operand": true }]
-  },
+  {"keys": ["up"], "command": "socket_history", "args": {"i":-1},
+    "context": [
+      {"key": "setting.socket", "operator": "equal", "operand": true },
+    { "key": "auto_complete_visible", "operator": "equal", "operand": false }]},
+  {"keys": ["down"], "command": "socket_history", "args": {"i":1},
+    "context": [
+      {"key": "setting.socket", "operator": "equal", "operand": true },
+    { "key": "auto_complete_visible", "operator": "equal", "operand": false }]},
+  {"keys": ["enter"], "command": "socket_enter", "args": {},
+    "context": [
+    {"key": "setting.socket", "operator": "equal", "operand": true },
+    {"key": "auto_complete_visible", "operator": "equal", "operand": false }]},
+  {"keys": ["ctrl+shift+x"], "command": "socket_clear", "args": {},
+    "context": []},
   { "keys": ["ctrl+shift+c"], "command": "socket_connect" },
   { "keys": ["ctrl+shift+s"], "command": "socket_send_selection" },
   { "keys": ["ctrl+shift+l"], "command": "socket_send_line" },
