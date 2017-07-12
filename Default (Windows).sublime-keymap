@@ -11,6 +11,9 @@
     "context": [
     {"key": "setting.socket", "operator": "equal", "operand": true },
     {"key": "auto_complete_visible", "operator": "equal", "operand": false }]},
+  {"keys": ["backspace"], "command": "socket_block", "args": {},
+    "context": [
+    {"key": "setting.noback", "operator": "equal", "operand": true }]},
   {"keys": ["ctrl+shift+x"], "command": "socket_clear", "args": {},
     "context": []},
   { "keys": ["ctrl+shift+c"], "command": "socket_connect" },

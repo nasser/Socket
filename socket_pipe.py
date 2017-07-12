@@ -13,8 +13,7 @@ class SocketPipe(threading.Thread):
         self.view = view
         self.written_characters = 0
         self.buffer = []
-        self.prompt = 6
-        self.namespace = "user=>"
+        self.prompt = 0
         self.hist = 0
         self.history = []
 
@@ -45,6 +44,19 @@ class SocketPipe(threading.Thread):
         self.view.settings().set("word_wrap", False)
 
     def update_view(self):
+        # prevent editing repl view if a selection is before the prompt
+        oob = False
+        self.view.settings().set("noback", False)
+        for region in self.view.sel():
+            # backspace is a special case, a sublime-keymap binding checks the 'noback' setting
+            if region.a == self.prompt and region.b == region.a:
+                self.view.settings().set("noback", True)
+            if region.a < self.prompt or region.b < self.prompt:
+                oob = True
+        if oob:
+            self.view.set_read_only(True)
+        else:
+            self.view.set_read_only(False)
         for b in self.buffer:
             self.view.run_command("socket_insert_text", {"content": b})
         self.buffer = []

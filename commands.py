@@ -226,3 +226,7 @@ class SocketHistoryCommand(sublime_plugin.TextCommand):
         if (len(s.history) * -1) <= s.hist + i < 0:
             s.hist += i
             repl.replace(edit,sublime.Region(s.prompt, repl.size()), s.history[s.hist])
+
+class SocketBlockCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        pass

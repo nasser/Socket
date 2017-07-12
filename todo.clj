@@ -5,9 +5,9 @@
     hard.core))
 
 '[repl
-  ([/] history + navigation
+  ([x] history + navigation
     ([x] don't record duplicate history)
-    ([ ] prevent editing above history prompt?))]
+    ([x] prevent editing above history prompt?))]
 
 '[interface
   ([x] better socket view insertion - only create second group if none exists)
