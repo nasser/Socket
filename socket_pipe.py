@@ -26,6 +26,8 @@ class SocketPipe(threading.Thread):
         else:
             raise "Invalid type"
         self.sock.connect((host, port))
+        if type == "tcp" or type == "tcp6":
+            self.sock.settimeout(1)
         print("Connected SocketPipe to %s:%s" % (host, port))
         
         if(initial):
@@ -65,8 +67,12 @@ class SocketPipe(threading.Thread):
         
     def on_close(self):
         self.running = False
-        self.sock.shutdown(socket.SHUT_RDWR)
-        self.sock.close()
+        self.view.set_name(self.view.name() + " [CLOSED]")
+        try:
+            self.sock.shutdown(socket.SHUT_RDWR)
+            self.sock.close()
+        except:
+            pass
     
     def record_history(self, s):
         rx = re.search("[\\n]*$", s)
@@ -91,6 +97,11 @@ class SocketPipe(threading.Thread):
         while self.running:
             try:
                 read = self.sock.recv(8012)
-                self.buffer.append(read.decode('utf8'))
-            except socket.error:
-                print("connecting...")
+                if(len(read) == 0):
+                    self.on_close()
+                else:
+                    self.buffer.append(read.decode('utf8'))
+            except socket.timeout as e:
+                continue
+            except socket.error as e:
+                print(e)
